@@ -1,0 +1,86 @@
+// --- الإعدادات الأساسية (لا تحذفها) ---
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// --- تصميم الجداول المطور ---
+
+// 1. جدول المستخدمين (طلاب ومدرسين)
+model User {
+  id              Int          @id @default(autoincrement())
+  email           String       @unique
+  password        String
+  name            String
+  role            Role         @default(STUDENT)
+  enrollments     Enrollment[]
+  createdCourses  Course[]     @relation("TeacherCourses")
+  createdAt       DateTime     @default(now())
+}
+
+enum Role {
+  STUDENT
+  TEACHER
+  ADMIN
+}
+
+// 2. جدول التسجيل (يربط الطالب بالكورسات)
+model Enrollment {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  courseId  Int
+  student   User     @relation(fields: [studentId], references: [id])
+  course    Course   @relation(fields: [courseId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([studentId, courseId]) 
+}
+
+// // 3. جدول المواد الدراسية (فيزياء، رياضيات، إلخ)
+// model Subject {
+//   id      Int      @id @default(autoincrement())
+//   name    String
+//   courses Course[]
+// }
+// 1. نقوم بتعريف القائمة الثابتة للمواد في أسفل الملف
+enum CourseSubject {
+  MATH
+  PHYSICS
+  CHEMISTRY
+  BIOLOGY
+  ENGLISH
+  ARABIC
+  HISTORY
+  GEOGRAPHY
+  COMPUTER_SCIENCE
+  ART
+}
+
+// 4. جدول الكورسات
+model Course {
+  id          Int          @id @default(autoincrement())
+  title       String
+  description String?
+  price       Float        @default(0.0)
+  teacherId   Int
+  teacher     User         @relation("TeacherCourses", fields: [teacherId], references: [id])
+  subject     CourseSubject     // @relation(fields: [subjectId], references: [id])
+  lessons     Lesson[]
+  enrollments Enrollment[]
+}
+
+// 5. جدول الدروس
+model Lesson {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String?  
+  videoUrl  String
+  pdfUrl    String?  
+  courseId  Int
+  course    Course   @relation(fields: [courseId], references: [id])
+}

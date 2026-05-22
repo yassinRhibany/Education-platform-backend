@@ -1,0 +1,24 @@
+تفعيل الحاوية 
+docker-compose up -d
+
+امر الترحيل 
+npx prisma migrate dev --name structural_improvement
+
+امر الترحيل مع حل مشاكل الاصدارات 
+npm install prisma@6 @prisma/client@6
+
+التأكد من اتصال Prisma
+بعد تشغيل Docker، يجب أن نتأكد أن Prisma "ترى" قاعدة البيانات. نفذ الأمر:
+هذا الأمر يقوم بمزامنة جداولك الموجودة في schema.prisma مع قاعدة البيانات الفعلية في Docker.
+npx prisma db push
+
+
+تتبع التعليمات و الجداول بصريا مع قواعد البيانات 
+npx prisma studio
+
+
+تشغيل خادم الباك إيند (Node.js)
+node index.js
+
+يمكنك عمل Reset كامل لقاعدة البيانات لتنظيف كل الأنواع والجداول القديمة المتعارضة:
+npx prisma migrate reset
