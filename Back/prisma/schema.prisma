@@ -82,5 +82,9 @@ model Lesson {
   videoUrl  String
   pdfUrl    String?  
   courseId  Int
-  course    Course   @relation(fields: [courseId], references: [id])
+  // 💡 أضف هذين السطرين هنا:
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
 }
