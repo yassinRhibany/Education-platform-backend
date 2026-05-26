@@ -1,0 +1,17 @@
+{
+  "name": "education-platform-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "back",
+    "front"
+  ],
+  "scripts": {
+    "start:back": "npm run dev --workspace=back",
+    "start:front": "npm run start --workspace=front",
+    "dev": "concurrently \"npm run start:back\" \"npm run start:front\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
